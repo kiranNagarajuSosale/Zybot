@@ -1,0 +1,2 @@
+# Zybot
+Zynergy Bot App
