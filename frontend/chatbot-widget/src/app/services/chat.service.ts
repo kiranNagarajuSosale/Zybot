@@ -1,0 +1,25 @@
+// import { Injectable } from '@angular/core';
+
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class ChatService {
+  
+// }
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ChatQuery } from '../Model/request';
+
+@Injectable({ providedIn: 'root' })
+export class ChatService {
+  private chatUrl = 'http://127.0.0.1:8000/chat';
+
+  constructor(private http: HttpClient) {}
+
+  sendMessage(payload: ChatQuery): Observable<any> {
+    return this.http.post<any>(this.chatUrl, payload);
+  }
+}
+

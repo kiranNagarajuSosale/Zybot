@@ -1,0 +1,24 @@
+<div class="chat-button" (click)="toggleChat()">
+  💬
+</div>
+<div class="chat-window" *ngIf="isOpen">
+  <div class="chat-header">
+    <span>ZyBot</span>
+    <button (click)="toggleChat()">✖</button>
+  </div>
+
+  <div class="chat-body">
+    <div *ngFor="let msg of messages" [ngClass]="msg.sender">
+      {{ msg.text }}
+    </div>
+    <div *ngIf="isLoading" class="typing-loader">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" [disabled]="isLoading"
+      [placeholder]="isLoading ? 'Zybot is thinking' : 'Type a message...'" />
+    <button (click)="sendMessage()" [disabled]="isLoading">Send</button>
+  </div>
+</div>
