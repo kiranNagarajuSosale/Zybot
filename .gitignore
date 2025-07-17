@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Virtual environments
+venv/
+env/
+ENV/
+*.env
+.env.local
+.env.*
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Frontend
+node_modules/
+*.lock
+*.cache
+*.log
+
+# Chat widget build artifacts
+frontend/dist/
+frontend/build/
+
+# Git repo data
+data/repo/
+data/*.zip
+
+# Vector DB
+vector_store/
+*.faiss
+*.pkl
+*.db
+
+# Azure deployment artifacts
+*.azure
+*.publishsettings
+
+# Misc
+*.bak
+*.tmp
+*.swp
