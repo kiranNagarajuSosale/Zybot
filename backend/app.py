@@ -18,7 +18,7 @@ class Query(BaseModel):
     role: str
     dom_context: str = ""
     trace_context: str = ""
-    model:str 
+    model: str = "gemini-1.5-flash"
 
 @app.post("/chat")
 async def chat(query: Query):
