@@ -3,4 +3,5 @@ export interface ChatQuery {
   role: string;
   dom_context?: string;
   trace_context?: string;
+  model?: string;
 }

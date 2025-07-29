@@ -18,10 +18,11 @@ class Query(BaseModel):
     role: str
     dom_context: str = ""
     trace_context: str = ""
+    model:str 
 
 @app.post("/chat")
 async def chat(query: Query):
-    chain = load_chain(role=query.role)
+    chain = load_chain(role=query.role, geminiModel=query.model)
 
     # Inject extra context
     runtime_context = f"{query.dom_context}\n\n{query.trace_context}"

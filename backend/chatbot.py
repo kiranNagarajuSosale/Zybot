@@ -10,7 +10,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 # Load environment variables from .env file
 load_dotenv()
 
-def load_chain(role="developer"):
+
+
+def load_chain(role="developer", geminiModel="gemini-1.5-flash"):
     """
     Loads and configures a conversational retrieval chain based on the specified role.
 
@@ -52,7 +54,7 @@ Answer:"""
 
         # Initialize Gemini LLM
         # Ensure GOOGLE_API_KEY is set in your .env file
-        llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
+        llm = ChatGoogleGenerativeAI(model=geminiModel, temperature=0)
 
         return ConversationalRetrievalChain.from_llm(
             llm=llm,

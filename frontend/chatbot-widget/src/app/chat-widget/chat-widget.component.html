@@ -4,6 +4,18 @@
 <div class="chat-window" *ngIf="isOpen">
   <div class="chat-header">
     <span>ZyBot</span>
+    <div class="model-select" style="display:inline-block; margin-left:16px;">
+      <label for="modelDropdown">Choose Model:</label>
+      <select id="modelDropdown" [(ngModel)]="selectedModel" (change)="onModelChange($event)">
+        <option *ngFor="let model of models" [value]="model">{{ model }}</option>
+      </select>
+    </div>
+    <div class="role-select" style="display:inline-block; margin-left:16px;">
+      <label for="roleDropdown">Role:</label>
+      <select id="roleDropdown" [(ngModel)]="selectedRole">
+        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+      </select>
+    </div>
     <button (click)="toggleChat()">✖</button>
   </div>
 
@@ -16,9 +28,9 @@
     </div>
   </div>
 
-  <div class="chat-footer">
+  <div class="chat-footer" [ngClass]="{'typing-loader': isLoading}">
     <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" [disabled]="isLoading"
-      [placeholder]="isLoading ? 'Zybot is thinking' : 'Type a message...'" />
+      [placeholder]="isLoading ? 'Zybot is thinking... 💬' : 'Type a message...'" />
     <button (click)="sendMessage()" [disabled]="isLoading">Send</button>
   </div>
 </div>
