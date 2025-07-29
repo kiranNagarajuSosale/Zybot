@@ -16,6 +16,12 @@ export class ChatWidgetComponent {
   userInput = '';
   messages: { text: string, sender: 'user' | 'bot' }[] = [];
 
+  models: string[] = ['gemini-2.0-flash','gemini-2.5-flash', 'gemini-2.5-pro'];
+  selectedModel: string = this.models[0]; // Default to 'gemini-2.0-flash'
+
+  roles: string[] = ['developer', 'tester', 'user'];
+  selectedRole: string = this.roles[0]; // Default to 'developer'
+
   constructor(private chatService: ChatService, private cdr: ChangeDetectorRef) {}
 
   toggleChat() {
@@ -23,6 +29,11 @@ export class ChatWidgetComponent {
   }
 
   isLoading = false;
+
+  onModelChange(event: any) {
+    this.selectedModel = event.target.value;
+    // Optionally notify backend or chat service about model change
+  }
 
   sendMessage() {
     const message = this.userInput.trim();
@@ -34,9 +45,10 @@ export class ChatWidgetComponent {
 
     this.chatService.sendMessage({
       question: message,
-      role: 'user',
+      role: this.selectedRole,
       dom_context: '',
-      trace_context: ''
+      trace_context: '',
+      model: this.selectedModel
     }).subscribe({
       next: (response: ChatResponse) => {
         if (response.answer) {

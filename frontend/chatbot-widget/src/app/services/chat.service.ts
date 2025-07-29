@@ -10,6 +10,7 @@ export class ChatService {
   constructor(private http: HttpClient) {}
 
   sendMessage(payload: ChatQuery): Observable<any> {
+    console.log("Sending chat payload:", payload);
     return this.http.post<any>(this.chatUrl, payload);
   }
 }
