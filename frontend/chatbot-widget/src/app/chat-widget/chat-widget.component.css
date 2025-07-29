@@ -98,6 +98,73 @@
   border-bottom-left-radius: 4px;
 }
 
+/* Styling for HTML content in bot messages */
+.chat-body .bot p {
+  margin: 8px 0;
+}
+
+.chat-body .bot ul, .chat-body .bot ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.chat-body .bot li {
+  margin: 4px 0;
+}
+
+.chat-body .bot strong {
+  font-weight: 600;
+  color: #222;
+}
+
+.chat-body .bot code {
+  background: #f0f0f0;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+}
+
+/* Styling for code blocks */
+.chat-body .bot pre {
+  background: #2d3748;
+  color: #e2e8f0;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 10px 0;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.chat-body .bot pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* Styling for inline code vs block code */
+.chat-body .bot p code {
+  background: #f0f0f0;
+  color: #d63384;
+  font-weight: 500;
+}
+
+/* Headers in bot responses */
+.chat-body .bot h1, .chat-body .bot h2, .chat-body .bot h3, 
+.chat-body .bot h4, .chat-body .bot h5, .chat-body .bot h6 {
+  margin: 12px 0 8px 0;
+  color: #1a202c;
+  font-weight: 600;
+}
+
+.chat-body .bot h1 { font-size: 18px; }
+.chat-body .bot h2 { font-size: 16px; }
+.chat-body .bot h3 { font-size: 14px; }
+.chat-body .bot h4 { font-size: 13px; }
+
 .chat-footer {
   display: flex;
   border-top: 1px solid #ddd;

@@ -36,15 +36,23 @@ def load_chain(role="developer", geminiModel="gemini-1.5-flash"):
 
         # Role-based prompt instructions
         role_prompt_instruction = {
-            "developer": "Explain code, architecture, and impact of changes.",
-            "tester": "Explain features, suggest test cases and edge cases. Use DOM and XPath context if available.",
-            "user": "Explain functionality and navigation in simple language."
+            "developer": "Explain code, architecture, and impact of changes. Use proper Markdown formatting with code blocks (```language) for code snippets, bullet points for lists, and headers for sections.",
+            "tester": "Explain features, suggest test cases and edge cases. Use DOM and XPath context if available. Format responses with clear sections using Markdown headers and bullet points.",
+            "user": "Explain functionality and navigation in simple language. Use clear formatting with bullet points and numbered lists where appropriate."
         }
         # Get the specific instruction for the current role, with a default if role is not found
         instruction = role_prompt_instruction.get(role, "You are a helpful assistant.")
 
         # Updated template to include role-based instructions and chat history
         template = f"""You are an assistant helping a {role}. {instruction}
+
+Format your responses using proper Markdown:
+- Use ```language for code blocks (e.g., ```csharp, ```javascript)
+- Use ## for main headers and ### for sub-headers
+- Use bullet points (-) and numbered lists (1.) where appropriate
+- Use **bold** for important terms
+- Use `inline code` for short code snippets or file names
+
 Chat History:
 {{chat_history}}
 Context: {{context}}
