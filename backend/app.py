@@ -27,7 +27,7 @@ def prettify_response(text: str) -> str:
         return f'<pre><code class="language-{language}">{code_content}</code></pre>'
     
     # Replace fenced code blocks with HTML
-    text = re.sub(r'```(\w+)?\n(.*?)\n```', replace_code_block, text, flags=re.DOTALL)
+    text = re.sub(r'```(\w+)?\n(.*?)\n?```', replace_code_block, text, flags=re.DOTALL)
     
     # Convert the rest with markdown
     html_result = markdown.markdown(text)
