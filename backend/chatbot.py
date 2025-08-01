@@ -36,7 +36,7 @@ def load_chain(role="developer", geminiModel="gemini-1.5-flash"):
 
         # Role-based prompt instructions
         role_prompt_instruction = {
-            "developer": "Explain code, architecture, and impact of changes.",
+           "developer": "Explain code, architecture, and impact of changes.",
             "tester": "Explain features, suggest test cases and edge cases. Use DOM and XPath context if available.",
             "user": "Explain functionality and navigation in simple language."
         }
@@ -45,6 +45,7 @@ def load_chain(role="developer", geminiModel="gemini-1.5-flash"):
 
         # Updated template to include role-based instructions and chat history
         template = f"""You are an assistant helping a {role}. {instruction}
+
 Chat History:
 {{chat_history}}
 Context: {{context}}

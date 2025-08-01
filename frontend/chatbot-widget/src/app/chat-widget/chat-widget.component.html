@@ -21,7 +21,8 @@
 
   <div class="chat-body">
     <div *ngFor="let msg of messages" [ngClass]="msg.sender">
-      {{ msg.text }}
+      <div *ngIf="msg.format === 'html'" [innerHTML]="msg.text"></div>
+      <div *ngIf="msg.format !== 'html'">{{ msg.text }}</div>
     </div>
     <div *ngIf="isLoading" class="typing-loader">
       <span></span><span></span><span></span>

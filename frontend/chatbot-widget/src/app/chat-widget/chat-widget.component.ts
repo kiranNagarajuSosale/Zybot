@@ -3,6 +3,7 @@ import { ChatService } from '../services/chat.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatResponse } from '../Model/response';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-chat-widget',
@@ -14,7 +15,7 @@ import { ChatResponse } from '../Model/response';
 export class ChatWidgetComponent {
   isOpen = false;
   userInput = '';
-  messages: { text: string, sender: 'user' | 'bot' }[] = [];
+  messages: { text: string | SafeHtml, sender: 'user' | 'bot', format?: string }[] = [];
 
   models: string[] = ['gemini-2.0-flash','gemini-2.5-flash', 'gemini-2.5-pro'];
   selectedModel: string = this.models[0]; // Default to 'gemini-2.0-flash'
@@ -22,7 +23,7 @@ export class ChatWidgetComponent {
   roles: string[] = ['developer', 'tester', 'user'];
   selectedRole: string = this.roles[0]; // Default to 'developer'
 
-  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef) {}
+  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) {}
 
   toggleChat() {
     this.isOpen = !this.isOpen;
@@ -52,7 +53,24 @@ export class ChatWidgetComponent {
     }).subscribe({
       next: (response: ChatResponse) => {
         if (response.answer) {
-          this.messages.push({ text: response.answer, sender: 'bot' });
+          console.log("Chatbot response:", response);
+          console.log("Response format:", response.format);
+          console.log("Response answer length:", response.answer.length);
+          console.log("First 100 chars:", response.answer.substring(0, 100));
+          
+          let messageText: string | SafeHtml = response.answer;
+          
+          // If it's HTML format, sanitize it for safety
+          if (response.format === 'html') {
+            messageText = this.sanitizer.bypassSecurityTrustHtml(response.answer);
+            console.log("HTML sanitized successfully");
+          }
+          
+          this.messages.push({ 
+            text: messageText, 
+            sender: 'bot',
+            format: response.format 
+          });
         }
         this.isLoading = false;
         this.cdr.detectChanges();
