@@ -4,8 +4,13 @@ from chatbot import load_chain
 from dom_context import get_runtime_dom_data
 from runtime_tracer import get_runtime_trace
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+import os
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 chat_chain = load_chain()  # default is "developer"
 
 app.add_middleware(
@@ -30,3 +35,7 @@ async def chat(query: Query):
 
     result = chain.run(final_input)
     return {"answer": result}
+
+@app.get("/")
+def serve_index():
+    return FileResponse(os.path.join("static", "index.html"))
