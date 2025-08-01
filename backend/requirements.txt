@@ -1,8 +1,20 @@
+# Core backend
 fastapi
 uvicorn
+python-dotenv
+python-multipart
+
+# LangChain + Embeddings + Retrieval
 langchain
 langchain-community
+langchain-google-genai
+langchain-huggingface
 faiss-cpu
-python-dotenv
-sentence-transformers 
-langchain-google-genai 
+InstructorEmbedding
+transformers
+sentence-transformers  # still useful for fallback/default
+rank_bm25
+
+# DOM/XPath and HTML parsing
+beautifulsoup4
+lxml

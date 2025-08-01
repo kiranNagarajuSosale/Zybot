@@ -13,3 +13,6 @@ source venv/bin/activate
 
 4:To run a python file
   python <filename>.py
+
+5: To run bakcend
+uvicorn app:app --reload
