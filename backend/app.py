@@ -18,7 +18,8 @@ chat_chain = load_chain()  # default is "developer"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+    allow_origins=["http://localhost:5199"], allow_methods=["*"], allow_headers=["*"],# Don't use "*" with allow_credentials=True
+    allow_credentials=True
 )
 
 def prettify_response(text: str) -> str:

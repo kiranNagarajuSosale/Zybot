@@ -16,5 +16,5 @@ import 'zone.js';
     injector: app.injector,
   });
 
-  customElements.define('chat-widget', customEl);
+  customElements.define('zy-bot', customEl);
 })();

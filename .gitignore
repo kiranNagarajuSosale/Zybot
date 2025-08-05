@@ -8,6 +8,11 @@ dist/
 build/
 *.log
 
+# Certificates
+certs/
+*.pem
+*.key
+
 # Virtual environments
 venv/
 env/

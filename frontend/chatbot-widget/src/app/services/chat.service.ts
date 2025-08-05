@@ -5,7 +5,7 @@ import { ChatQuery } from '../Model/request';
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
-  private chatUrl = 'http://127.0.0.1:8000/chat';
+  private chatUrl = 'https://127.0.0.1:9443/chat';
 
   constructor(private http: HttpClient) {}
 
