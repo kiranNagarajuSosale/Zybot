@@ -28,6 +28,10 @@
   </div>
 
   <div class="chat-body">
+    <div *ngIf="selectedDomContent" class="dom-context-preview">
+      <div class="preview-header">Selected Content:</div>
+      <div class="preview-content">{{ selectedDomContent }}</div>
+    </div>
     <div *ngFor="let msg of messages" [ngClass]="msg.sender">
       <div *ngIf="msg.format === 'html'" [innerHTML]="msg.text"></div>
       <div *ngIf="msg.format !== 'html'">{{ msg.text }}</div>
@@ -40,6 +44,7 @@
   <div class="chat-footer" [ngClass]="{'typing-loader': isLoading}">
     <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" [disabled]="isLoading"
       [placeholder]="isLoading ? 'Zybot is thinking... 💬' : 'Type a message...'" />
+    <button (click)="clearChat()" title="Clear chat history and selected content" [disabled]="isLoading || ((!selectedDomContent) && messages.length === 0)">🗑️</button>
     <button (click)="sendMessage()" [disabled]="isLoading">Send</button>
   </div>
 </div>
