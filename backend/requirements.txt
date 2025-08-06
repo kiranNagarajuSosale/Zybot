@@ -7,4 +7,3 @@ python-dotenv
 sentence-transformers 
 langchain-google-genai
 markdown
-pygments
