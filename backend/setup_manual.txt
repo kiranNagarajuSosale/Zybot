@@ -8,8 +8,30 @@ venv\Scripts\activate
 # macOS/Linux:
 source venv/bin/activate
 
-3:install dependencies 
+3:install dependencies (inside backend)
  pip install -r requirements.txt
 
 4:To run a python file
   python <filename>.py
+
+5.To generate the ssl cert and keys
+  i: cd backend
+  ii: open git bash and run the commands below(in git bash)
+      a. mkdir certs
+      b. openssl req -x509 -newkey rsa:2048 -nodes -keyout certs/key.pem -out certs/cert.pem -days 365
+  iii: Params to enter
+        Country Name (2 letter code) [AU]: (press Enter)
+        State or Province Name [Some-State]: (press Enter)
+        Locality Name []: (press Enter)
+        Organization Name []: (press Enter)
+        Organizational Unit Name []: (press Enter)
+        Common Name []: localhost //"Important"
+        Email Address []: (press Enter)
+
+
+5.To run the fastapi and start the backend
+  python run_secure.py
+
+6.Open the application where the ZyBot has to be integrated and add the following lines in the index/layout/any common .html files or to a specific files
+  <script src="https://localhost:9443/static/main.js"></script> //src url is the url where the backend is hosted
+  <zy-bot></zy-bot>
