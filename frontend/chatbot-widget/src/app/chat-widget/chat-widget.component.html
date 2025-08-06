@@ -3,6 +3,14 @@
 </div>
 <div class="chat-window" *ngIf="isOpen">
   <div class="chat-header">
+    <div class="dom-context-toggle">
+      <label class="switch">
+        <input type="checkbox" (change)="toggleDomContext()" />
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">DOM Context</span>
+    </div>
+
     <span>ZyBot</span>
     <div class="model-select" style="display:inline-block; margin-left:16px;">
       <label for="modelDropdown">Choose Model:</label>
