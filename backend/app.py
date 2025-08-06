@@ -7,13 +7,19 @@ from fastapi.middleware.cors import CORSMiddleware
 import markdown
 import re
 import html
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+import os
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 chat_chain = load_chain()  # default is "developer"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+    allow_origins=["http://localhost:5199"], allow_methods=["*"], allow_headers=["*"],# Don't use "*" with allow_credentials=True
+    allow_credentials=True
 )
 
 def prettify_response(text: str) -> str:
@@ -53,3 +59,7 @@ async def chat(query: Query):
     pretty_result = prettify_response(result)
 
     return {"answer": pretty_result, "format": "html"}
+
+@app.get("/")
+def serve_index():
+    return FileResponse(os.path.join("static", "index.html"))

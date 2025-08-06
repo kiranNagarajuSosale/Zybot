@@ -1,6 +1,20 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
-import { App } from './app/app';
+import { createApplication } from '@angular/platform-browser';
+import { createCustomElement } from '@angular/elements';
+import { ChatWidgetComponent } from './app/chat-widget/chat-widget.component';
+import { importProvidersFrom } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import 'zone.js';
 
-bootstrapApplication(App, appConfig)
-  .catch((err) => console.error(err));
+(async () => {
+  const app = await createApplication({
+    providers: [
+      importProvidersFrom(HttpClientModule)
+    ]
+  });
+
+  const customEl = createCustomElement(ChatWidgetComponent, {
+    injector: app.injector,
+  });
+
+  customElements.define('zy-bot', customEl);
+})();

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@angular/elements": "^20.1.4",
+    "@webcomponents/custom-elements": "^1.6.0"
+  }
+}
