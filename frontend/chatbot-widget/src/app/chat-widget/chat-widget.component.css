@@ -324,10 +324,6 @@ input:checked + .slider:before {
   }
 }
 
-.chat-header {
-  background: linear-gradient(135deg, #4e54c8, #8f94fb);
-  color: white;
-
 /* Style for when DOM context mode is active */
 body.dom-context-active * {
   cursor: pointer !important;
