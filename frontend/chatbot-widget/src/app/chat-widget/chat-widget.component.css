@@ -324,18 +324,6 @@ input:checked + .slider:before {
   }
 }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(78, 84, 200, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(78, 84, 200, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(78, 84, 200, 0);
-  }
-}
-
 .chat-header {
   background: linear-gradient(135deg, #4e54c8, #8f94fb);
   color: white;
