@@ -3,27 +3,29 @@
 </div>
 <div class="chat-window" *ngIf="isOpen">
   <div class="chat-header">
+    <div class="chat-header-title">
+      <span>ZyBot</span>
+    </div>
     <div class="dom-context-toggle">
-      <label class="switch">
-        <input type="checkbox" (change)="toggleDomContext()" />
+      <label for="domContextToggle" class="switch">
+        <input id="domContextToggle" type="checkbox" (change)="toggleDomContext()" />
         <span class="slider"></span>
       </label>
-      <span class="toggle-label">DOM Context</span>
+      <span class="toggle-label" style="font-size: 10px;">DOM Context</span>
     </div>
-
-    <span>ZyBot</span>
-    <div class="model-select" style="display:inline-block; margin-left:16px;">
-      <label for="modelDropdown">Choose Model:</label>
-      <select id="modelDropdown" [(ngModel)]="selectedModel" (change)="onModelChange($event)">
+    <div class="model-select" style="display:inline-block;">
+      <label for="modelDropdown" style="font-size: 12px;">Choose Model:</label>
+      <select id="modelDropdown" [(ngModel)]="selectedModel" (change)="onModelChange($event)" style="font-size: 10px;">
         <option *ngFor="let model of models" [value]="model">{{ model }}</option>
       </select>
     </div>
-    <div class="role-select" style="display:inline-block; margin-left:16px;">
-      <label for="roleDropdown">Role:</label>
-      <select id="roleDropdown" [(ngModel)]="selectedRole">
+    <div class="role-select" style="display:inline-block; margin-left:5px;">
+      <label for="roleDropdown" style="font-size: 12px;">Role:</label>
+      <select id="roleDropdown" [(ngModel)]="selectedRole" style="font-size: 10px;">
         <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
       </select>
     </div>
+    
     <button (click)="toggleChat()">✖</button>
   </div>
 
@@ -45,6 +47,6 @@
     <input [(ngModel)]="userInput" (keyup.enter)="sendMessage()" [disabled]="isLoading"
       [placeholder]="isLoading ? 'Zybot is thinking... 💬' : 'Type a message...'" />
     <button (click)="clearChat()" title="Clear chat history and selected content" [disabled]="isLoading || ((!selectedDomContent) && messages.length === 0)">🗑️</button>
-    <button (click)="sendMessage()" [disabled]="isLoading">Send</button>
+    <button (click)="sendMessage()" [disabled]="isLoading || !userInput">Send</button>
   </div>
 </div>
