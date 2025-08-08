@@ -31,40 +31,36 @@
 
   <div class="chat-body" #chatBody>
     <!-- Show DOM content at the top only when there are no messages -->
-    <div *ngIf="selectedDomContent && messages.length === 0" class="dom-context-preview">
-      <div class="preview-header">Selected Content:</div>
-      <div class="preview-content">{{ selectedDomContent }}</div>
-      <div *ngIf="selectedDomData" class="preview-details">
-        <div class="details-header">
-          <strong>DOM Details</strong>
-          <button class="send-dom-btn" (click)="clearDomDetails()" title="Clear DOM details">�️</button>
-        </div>
-        <div><strong>Tag:</strong> {{ selectedDomData.tagName }}</div>
-        <div *ngIf="selectedDomData.id"><strong>ID:</strong> {{ selectedDomData.id }}</div>
-        <div *ngIf="selectedDomData.className"><strong>Class:</strong> {{ selectedDomData.className }}</div>
-      </div>
-    </div>
+    <ng-container *ngIf="selectedDomContent && messages.length === 0">
+      <ng-container *ngTemplateOutlet="domPreview"></ng-container>
+    </ng-container>
     <div *ngFor="let msg of messages" [ngClass]="msg.sender">
       <div *ngIf="msg.format === 'html'" [innerHTML]="msg.text"></div>
       <div *ngIf="msg.format !== 'html'">{{ msg.text }}</div>
     </div>
     <!-- Show DOM content after messages when there are messages -->
-    <div *ngIf="selectedDomContent && messages.length > 0" class="dom-context-preview">
-      <div class="preview-header">Selected Content:</div>
-      <div class="preview-content">{{ selectedDomContent }}</div>
-      <div *ngIf="selectedDomData" class="preview-details">
-        <div class="details-header">
-          <strong>DOM Details</strong>
-          <button class="send-dom-btn" (click)="clearDomDetails()" title="Clear DOM details">�️</button>
-        </div>
-        <div><strong>Tag:</strong> {{ selectedDomData.tagName }}</div>
-        <div *ngIf="selectedDomData.id"><strong>ID:</strong> {{ selectedDomData.id }}</div>
-        <div *ngIf="selectedDomData.className"><strong>Class:</strong> {{ selectedDomData.className }}</div>
-      </div>
-    </div>
+    <ng-container *ngIf="selectedDomContent && messages.length > 0">
+      <ng-container *ngTemplateOutlet="domPreview"></ng-container>
+    </ng-container>
     <div *ngIf="isLoading" class="typing-loader">
       <span></span><span></span><span></span>
     </div>
+
+    <ng-template #domPreview>
+      <div class="dom-context-preview">
+        <div class="preview-header">Selected Content:</div>
+        <div class="preview-content">{{ selectedDomContent }}</div>
+        <div *ngIf="selectedDomData" class="preview-details">
+          <div class="details-header">
+            <strong>DOM Details</strong>
+            <button class="send-dom-btn" (click)="clearDomDetails()" title="Clear DOM details">�️</button>
+          </div>
+          <div><strong>Tag:</strong> {{ selectedDomData.tagName }}</div>
+          <div *ngIf="selectedDomData.id"><strong>ID:</strong> {{ selectedDomData.id }}</div>
+          <div *ngIf="selectedDomData.className"><strong>Class:</strong> {{ selectedDomData.className }}</div>
+        </div>
+      </div>
+    </ng-template>
   </div>
 
   <div class="chat-footer" [ngClass]="{'typing-loader': isLoading}">
