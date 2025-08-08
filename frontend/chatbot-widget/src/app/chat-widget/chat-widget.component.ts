@@ -311,12 +311,22 @@ export class ChatWidgetComponent implements AfterViewChecked {
       let nodePosition = 1;
       
       // Get all siblings of the same type
-      let sibling = currentNode.previousSibling;
-      while (sibling) {
-        if (sibling.nodeName.toLowerCase() === nodeName) {
-          nodePosition++;
+      if (currentNode.parentNode) {
+        let siblings = currentNode.parentNode.childNodes;
+        let count = 0;
+        for (let i = 0; i < siblings.length; i++) {
+          let siblingNode = siblings[i];
+          if (
+            siblingNode.nodeType === currentNode.nodeType &&
+            (siblingNode as HTMLElement).nodeName.toLowerCase() === nodeName
+          ) {
+            count++;
+          }
+          if (siblingNode === currentNode) {
+            nodePosition = count;
+            break;
+          }
         }
-        sibling = sibling.previousSibling;
       }
       
       // Add to the path
