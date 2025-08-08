@@ -1,4 +1,4 @@
-<div class="chat-button" (click)="toggleChat()">
+<div class="chat-button" *ngIf="!domContextEnabled" (click)="toggleChat()">
   💬
 </div>
 <div class="chat-window" *ngIf="isOpen">
