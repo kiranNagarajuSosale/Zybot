@@ -170,7 +170,7 @@ export class ChatWidgetComponent implements AfterViewChecked {
               this.removeSelectableStyles();
               
               // Schedule scrolling after DOM context is displayed
-              setTimeout(() => this.scrollToBottom = true, 200);
+              setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
             }, 500);
           }
         }
