@@ -595,11 +595,5 @@ input:checked + .slider:before {
   margin-right: 10px;
 }
 
-.chat-button.disabled {
-  pointer-events: none;
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 
 
