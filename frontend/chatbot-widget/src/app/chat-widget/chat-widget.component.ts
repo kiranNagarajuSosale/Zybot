@@ -7,6 +7,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ChatQuery, DomContextData } from '../Model/request';
 
 // Define constant for scroll timing
+// 200ms delay allows the DOM to update and render new messages before scrolling to the bottom.
 const SCROLL_TO_BOTTOM_DELAY_MS = 200;
 
 @Component({
