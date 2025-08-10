@@ -6,12 +6,12 @@
     <div class="chat-header-title">
       <span>ZyBot</span>
     </div>
-    <div class="dom-context-toggle">
+    <div class="dom-context-toggle" title="Enable to select and reference specific content from the page. Click on any text or element to include it in your conversation.">
       <label for="domContextToggle" class="switch">
         <input id="domContextToggle" type="checkbox" (change)="toggleDomContext()" />
         <span class="slider"></span>
       </label>
-      <span class="toggle-label" style="font-size: 10px;">DOM Context</span>
+      <span class="toggle-label" style="font-size: 10px;">Select Content</span>
     </div>
     <div class="model-select" style="display:inline-block;">
       <label for="modelDropdown" style="font-size: 12px;">Choose Model:</label>
@@ -52,8 +52,8 @@
         <div class="preview-content">{{ selectedDomContent }}</div>
         <div *ngIf="selectedDomData" class="preview-details">
           <div class="details-header">
-            <strong>DOM Details</strong>
-            <button class="send-dom-btn" (click)="clearDomDetails()" title="Clear DOM details">x</button>
+            <strong>Content Details</strong>
+            <button class="send-dom-btn" (click)="clearDomDetails()" title="Clear selected content">x</button>
           </div>
           <div><strong>Tag:</strong> {{ selectedDomData.tagName }}</div>
           <div *ngIf="selectedDomData.id"><strong>ID:</strong> {{ selectedDomData.id }}</div>

@@ -32,11 +32,11 @@ export class ChatWidgetComponent implements AfterViewChecked, OnInit {
   private mouseMoveListener: ((event: MouseEvent) => void) | null = null;
   private hasShownWelcomeMessage = false;
 
-  models: string[] = ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-2.5-pro'];
-  selectedModel: string = this.models[0]; // Default to 'gemini-2.0-flash'
+  models: string[] = ['Gemini-2.0-flash', 'Gemini-2.5-flash', 'Gemini-2.5-pro'];
+  selectedModel: string = this.models[0]; // Default to 'Gemini-2.0-flash'
 
-  roles: string[] = ['developer', 'tester', 'user'];
-  selectedRole: string = this.roles[0]; // Default to 'developer'
+  roles: string[] = ['Developer', 'Tester', 'User'];
+  selectedRole: string = this.roles[0]; // Default to 'Developer'
 
   constructor(private chatService: ChatService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { }
 
@@ -376,7 +376,7 @@ export class ChatWidgetComponent implements AfterViewChecked, OnInit {
     
     // Add a confirmation message to the chat
     this.messages.push({
-      text: "DOM details have been cleared",
+      text: "Selected content has been cleared",
       sender: 'bot'
     });
     
