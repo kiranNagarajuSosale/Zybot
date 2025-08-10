@@ -1,10 +1,13 @@
-import { Component, ChangeDetectorRef, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectorRef, AfterViewChecked, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ChatService } from '../services/chat.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatResponse } from '../Model/response';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ChatQuery, DomContextData } from '../Model/request';
+
+// Define constant for scroll timing
+const SCROLL_TO_BOTTOM_DELAY_MS = 200;
 
 @Component({
   selector: 'app-chat-widget',
@@ -13,7 +16,7 @@ import { ChatQuery, DomContextData } from '../Model/request';
   templateUrl: './chat-widget.component.html',
   styleUrls: ['./chat-widget.component.css']
 })
-export class ChatWidgetComponent implements AfterViewChecked {
+export class ChatWidgetComponent implements AfterViewChecked, OnInit {
   @ViewChild('chatBody') private chatBodyRef!: ElementRef;
   private scrollToBottom = false;
   
@@ -26,6 +29,7 @@ export class ChatWidgetComponent implements AfterViewChecked {
   selectedDomData: DomContextData | null = null;
   private documentClickListener: ((event: MouseEvent) => void) | null = null;
   private mouseMoveListener: ((event: MouseEvent) => void) | null = null;
+  private hasShownWelcomeMessage = false;
 
   models: string[] = ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-2.5-pro'];
   selectedModel: string = this.models[0]; // Default to 'gemini-2.0-flash'
@@ -34,6 +38,10 @@ export class ChatWidgetComponent implements AfterViewChecked {
   selectedRole: string = this.roles[0]; // Default to 'developer'
 
   constructor(private chatService: ChatService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { }
+
+  ngOnInit(): void {
+    // Initialize any required data here
+  }
 
   ngAfterViewChecked() {
     if (this.scrollToBottom) {
@@ -56,9 +64,24 @@ export class ChatWidgetComponent implements AfterViewChecked {
   toggleChat() {
     this.isOpen = !this.isOpen;
     if (this.isOpen) {
+      // Display welcome message when chat is opened for the first time
+      if (!this.hasShownWelcomeMessage && this.messages.length === 0) {
+        this.showWelcomeMessage();
+        this.hasShownWelcomeMessage = true;
+      }
+      
       // Schedule scrolling for after view is updated
-      setTimeout(() => this.scrollToBottom = true, 100);
+      setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
     }
+  }
+  
+  private showWelcomeMessage() {
+    const welcomeMessage = "👋 Welcome to ZyBot! I'm your virtual assistant ready to help with your questions. Feel free to ask me anything about this website.";
+    
+    this.messages.push({
+      text: welcomeMessage,
+      sender: 'bot'
+    });
   }
 
   isLoading = false;
@@ -357,7 +380,7 @@ export class ChatWidgetComponent implements AfterViewChecked {
     });
     
     // Scroll to bottom after clearing DOM data
-    setTimeout(() => this.scrollToBottom = true, 100);
+    setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
   }
 
   sendMessage() {
@@ -372,7 +395,10 @@ export class ChatWidgetComponent implements AfterViewChecked {
     this.scrollToBottom = true;
     
     let traceContext = '';
+    let hasDomContext = false;
+    
     if (this.selectedDomContent) {
+      hasDomContext = true;
       try {
         const currentUrl = window.location.href;
         const timestamp = new Date().toISOString();
@@ -416,18 +442,34 @@ export class ChatWidgetComponent implements AfterViewChecked {
           });
         }
         this.isLoading = false;
+        
+        // Clear DOM context after sending the message and receiving a response
+        if (hasDomContext) {
+          this.selectedDomContent = null;
+          this.selectedDomElement = null;
+          this.selectedDomData = null;
+        }
+        
         this.cdr.detectChanges();
         
         // Scroll to bottom after receiving and rendering the response
-        setTimeout(() => this.scrollToBottom = true, 100);
+        setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
       },
       error: () => {
         this.messages.push({ text: 'Error: Unable to get response from bot.', sender: 'bot' });
         this.isLoading = false;
+        
+        // Clear DOM context even on error
+        if (hasDomContext) {
+          this.selectedDomContent = null;
+          this.selectedDomElement = null;
+          this.selectedDomData = null;
+        }
+        
         this.cdr.detectChanges();
         
         // Scroll to bottom even if there's an error
-        setTimeout(() => this.scrollToBottom = true, 100);
+        setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
       }
     });
   }
