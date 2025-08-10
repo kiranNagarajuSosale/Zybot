@@ -421,10 +421,10 @@ export class ChatWidgetComponent implements AfterViewChecked, OnInit {
     
     const requestPayload: ChatQuery = {
       question: message,
-      role: this.selectedRole,
+      role: this.selectedRole.toLowerCase(),
       dom_context: this.selectedDomData || undefined,
       trace_context: traceContext,
-      model: this.selectedModel
+      model: this.selectedModel.toLowerCase()
     };
     
     this.chatService.sendMessage(requestPayload).subscribe({
