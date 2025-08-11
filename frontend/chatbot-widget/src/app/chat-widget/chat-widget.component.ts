@@ -1,10 +1,14 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, AfterViewChecked, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { ChatService } from '../services/chat.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatResponse } from '../Model/response';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { ChatQuery } from '../Model/request';
+import { ChatQuery, DomContextData } from '../Model/request';
+
+// Define constant for scroll timing
+// 200ms delay allows the DOM to update and render new messages before scrolling to the bottom.
+const SCROLL_TO_BOTTOM_DELAY_MS = 200;
 
 @Component({
   selector: 'app-chat-widget',
@@ -13,25 +17,72 @@ import { ChatQuery } from '../Model/request';
   templateUrl: './chat-widget.component.html',
   styleUrls: ['./chat-widget.component.css']
 })
-export class ChatWidgetComponent {
+export class ChatWidgetComponent implements AfterViewChecked, OnInit {
+  @ViewChild('chatBody') private chatBodyRef!: ElementRef;
+  private scrollToBottom = false;
+  
   domContextEnabled = false;
   isOpen = false;
   userInput = '';
   messages: { text: string | SafeHtml, sender: 'user' | 'bot', format?: string }[] = [];
   selectedDomContent: string | null = null;
+  selectedDomElement: HTMLElement | null = null;
+  selectedDomData: DomContextData | null = null;
   private documentClickListener: ((event: MouseEvent) => void) | null = null;
   private mouseMoveListener: ((event: MouseEvent) => void) | null = null;
+  private hasShownWelcomeMessage = false;
 
-  models: string[] = ['gemini-2.0-flash', 'gemini-2.5-flash', 'gemini-2.5-pro'];
-  selectedModel: string = this.models[0]; // Default to 'gemini-2.0-flash'
+  models: string[] = ['Gemini-2.0-flash', 'Gemini-2.5-flash', 'Gemini-2.5-pro'];
+  selectedModel: string = this.models[0]; // Default to 'Gemini-2.0-flash'
 
-  roles: string[] = ['developer', 'tester', 'user'];
-  selectedRole: string = this.roles[0]; // Default to 'developer'
+  roles: string[] = ['Developer', 'Tester', 'User'];
+  selectedRole: string = this.roles[0]; // Default to 'Developer'
 
   constructor(private chatService: ChatService, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) { }
 
+  ngOnInit(): void {
+    // Initialize any required data here
+  }
+
+  ngAfterViewChecked() {
+    if (this.scrollToBottom) {
+      this.scrollChatToBottom();
+      this.scrollToBottom = false;
+    }
+  }
+
+  private scrollChatToBottom(): void {
+    try {
+      const chatBody = this.chatBodyRef?.nativeElement;
+      if (chatBody) {
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+    } catch (err) {
+      console.error('Error scrolling chat to bottom:', err);
+    }
+  }
+
   toggleChat() {
     this.isOpen = !this.isOpen;
+    if (this.isOpen) {
+      // Display welcome message when chat is opened for the first time
+      if (!this.hasShownWelcomeMessage && this.messages.length === 0) {
+        this.showWelcomeMessage();
+        this.hasShownWelcomeMessage = true;
+      }
+      
+      // Schedule scrolling for after view is updated
+      setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
+    }
+  }
+  
+  private showWelcomeMessage() {
+    const welcomeMessage = "👋 Welcome to ZyBot! I'm your virtual assistant ready to help with your questions. Feel free to ask me anything about this website.";
+    
+    this.messages.push({
+      text: welcomeMessage,
+      sender: 'bot'
+    });
   }
 
   isLoading = false;
@@ -43,6 +94,13 @@ export class ChatWidgetComponent {
   clearChat() {
     this.messages = [];
     this.selectedDomContent = null;
+    this.selectedDomElement = null;
+    this.selectedDomData = null;
+    
+    // Scroll to top after clearing chat
+    if (this.chatBodyRef?.nativeElement) {
+      this.chatBodyRef.nativeElement.scrollTop = 0;
+    }
   }
 
   toggleDomContext() {
@@ -118,7 +176,12 @@ export class ChatWidgetComponent {
             highlightBox.style.zIndex = '9999';
             document.body.appendChild(highlightBox);
             
+            // Store the selected element for later use
+            this.selectedDomElement = target;
             this.selectedDomContent = target.innerText.trim();
+            
+            // Capture comprehensive DOM information
+            this.captureDomData(target);
             
             setTimeout(() => {
               document.body.removeChild(highlightBox);
@@ -129,6 +192,9 @@ export class ChatWidgetComponent {
               this.chatService.setDomContextEnabled(false);
               this.removeDomClickListener();
               this.removeSelectableStyles();
+              
+              // Schedule scrolling after DOM context is displayed
+              setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
             }, 500);
           }
         }
@@ -197,9 +263,125 @@ export class ChatWidgetComponent {
     this.removeHighlightBoxes();
   }
 
+  private captureDomData(element: HTMLElement): void {
+    if (!element) return;
+
+    // Get computed styles for the element
+    const computedStyle = window.getComputedStyle(element);
+    const importantStyles: Record<string, string> = {};
+    
+    // Capture important styles that may be relevant for context
+    const stylesToCapture = [
+      'color', 'backgroundColor', 'fontSize', 'fontWeight', 
+      'display', 'position', 'visibility', 'opacity',
+      'margin', 'padding', 'border', 'width', 'height'
+    ];
+    
+    stylesToCapture.forEach(style => {
+      importantStyles[style] = computedStyle.getPropertyValue(style);
+    });
+
+    // Get all attributes
+    const attributes: Record<string, string> = {};
+    for (let i = 0; i < element.attributes.length; i++) {
+      const attr = element.attributes[i];
+      attributes[attr.name] = attr.value;
+    }
+
+    // Get XPath
+    const xpath = this.getXPathForElement(element);
+    
+    const rect = element.getBoundingClientRect();
+
+    // Create the dom context data object
+    this.selectedDomData = {
+      innerText: element.innerText,
+      innerHTML: element.innerHTML,
+      tagName: element.tagName.toLowerCase(),
+      id: element.id || undefined,
+      className: element.className || undefined,
+      attributes: attributes,
+      computedStyles: importantStyles,
+      xpath: xpath,
+      dimensions: {
+        width: rect.width,
+        height: rect.height,
+        top: rect.top,
+        left: rect.left
+      }
+    };
+  }
+
+  private getXPathForElement(element: HTMLElement): string {
+    if (!element) return '';
+    
+    // Check if the element has an ID
+    if (element.id) {
+      return `//*[@id="${element.id}"]`;
+    }
+    
+    // If the element is the document body, return the path
+    if (element === document.body) {
+      return '/html/body';
+    }
+    
+    // Variables for iteration
+    let currentNode = element;
+    let path = '';
+    
+    // Traverse the DOM upwards until we reach the body
+    while (currentNode && currentNode !== document.body) {
+      let nodeName = currentNode.nodeName.toLowerCase();
+      let nodePosition = 1;
+      
+      // Get all siblings of the same type
+      if (currentNode.parentNode) {
+        let siblings = currentNode.parentNode.childNodes;
+        let count = 0;
+        for (let i = 0; i < siblings.length; i++) {
+          let siblingNode = siblings[i];
+          if (
+            siblingNode.nodeType === currentNode.nodeType &&
+            (siblingNode as HTMLElement).nodeName.toLowerCase() === nodeName
+          ) {
+            count++;
+          }
+          if (siblingNode === currentNode) {
+            nodePosition = count;
+            break;
+          }
+        }
+      }
+      
+      // Add to the path
+      path = `/${nodeName}[${nodePosition}]${path}`;
+      
+      // Move up to the parent
+      currentNode = currentNode.parentElement as HTMLElement;
+    }
+    
+    return `/html/body${path}`;
+  }
+
   private isElementPartOfWidget(element: HTMLElement): boolean {
     const widgetElement = document.querySelector('app-chat-widget');
     return widgetElement?.contains(element) || false;
+  }
+
+  clearDomDetails() {
+    // Clear DOM details from the component
+    this.selectedDomContent = null;
+    this.selectedDomElement = null;
+    this.selectedDomData = null;
+    
+    // Add a confirmation message to the chat
+    this.messages.push({
+      text: "Selected content has been cleared",
+      sender: 'bot'
+    });
+    
+    // Scroll to bottom after clearing DOM data
+    setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
   }
 
   sendMessage() {
@@ -210,13 +392,14 @@ export class ChatWidgetComponent {
     this.userInput = '';
     this.isLoading = true;
     
-    let domContext = '';
-    if (this.selectedDomContent) {
-      domContext = this.selectedDomContent;
-    }
-
+    // Scroll to bottom after adding user message
+    this.scrollToBottom = true;
+    
     let traceContext = '';
+    let hasDomContext = false;
+    
     if (this.selectedDomContent) {
+      hasDomContext = true;
       try {
         const currentUrl = window.location.href;
         const timestamp = new Date().toISOString();
@@ -238,10 +421,10 @@ export class ChatWidgetComponent {
     
     const requestPayload: ChatQuery = {
       question: message,
-      role: this.selectedRole,
-      dom_context: domContext,
+      role: this.selectedRole.toLowerCase(),
+      dom_context: this.selectedDomData || undefined,
       trace_context: traceContext,
-      model: this.selectedModel
+      model: this.selectedModel.toLowerCase()
     };
     
     this.chatService.sendMessage(requestPayload).subscribe({
@@ -260,12 +443,34 @@ export class ChatWidgetComponent {
           });
         }
         this.isLoading = false;
+        
+        // Clear DOM context after sending the message and receiving a response
+        if (hasDomContext) {
+          this.selectedDomContent = null;
+          this.selectedDomElement = null;
+          this.selectedDomData = null;
+        }
+        
         this.cdr.detectChanges();
+        
+        // Scroll to bottom after receiving and rendering the response
+        setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
       },
       error: () => {
         this.messages.push({ text: 'Error: Unable to get response from bot.', sender: 'bot' });
         this.isLoading = false;
+        
+        // Clear DOM context even on error
+        if (hasDomContext) {
+          this.selectedDomContent = null;
+          this.selectedDomElement = null;
+          this.selectedDomData = null;
+        }
+        
         this.cdr.detectChanges();
+        
+        // Scroll to bottom even if there's an error
+        setTimeout(() => this.scrollToBottom = true, SCROLL_TO_BOTTOM_DELAY_MS);
       }
     });
   }
