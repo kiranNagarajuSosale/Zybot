@@ -1,10 +1,13 @@
+
 # Angular ZyBot Widget Setup Manual
 
 This manual describes how to set up, build, and use the Angular ZyBot widget both as a standalone application and as a web component plugin for any host application.
 
 ---
 
-## 1. Running Angular ZyBot Standalone
+## 1. Running Angular ZyBot Standalone (Full Angular App)
+
+You can run the Angular ZyBot as a full application for development or testing. Follow these steps:
 
 ### Prerequisites
 - Node.js and npm installed
@@ -12,28 +15,63 @@ This manual describes how to set up, build, and use the Angular ZyBot widget bot
 
 ### Steps
 1. Navigate to the widget directory:
-   ```powershell
-   cd frontend\chatbot-widget
-   ```
+    ```powershell
+    cd frontend\chatbot-widget
+    ```
 2. Install dependencies:
-   ```powershell
-   npm install
-   ```
-3. Run the development server:
-   ```powershell
-   ng serve
-   ```
-4. Access the app at `http://localhost:4200` in your browser.
+    ```powershell
+    npm install
+    ```
+3. Make sure the following files are set up for standalone mode:
+    - **`src/index.html`**
+       ```html
+       <!-- NOTE: This file is for running the Angular app independently. Use <app-root> for standalone mode. -->
+       <body>
+          <app-root></app-root>
+       </body>
+       ```
+    - **`src/main.ts`**
+       ```typescript
+       // NOTE: This entry point is for standalone Angular app. Use this for development and testing.
+       import { bootstrapApplication } from '@angular/platform-browser';
+       import { App } from './app/app';
+       import { appConfig } from './app/app.config';
+
+       bootstrapApplication(App, appConfig);
+       ```
+    - **`src/app/app.ts`**
+       ```typescript
+       // NOTE: This is the root Angular component for standalone mode.
+       import { Component, signal } from '@angular/core';
+       import { ChatWidgetComponent } from './chat-widget/chat-widget.component';
+
+       @Component({
+          selector: 'app-root',
+          standalone: true,
+          imports: [ChatWidgetComponent],
+          template: `<app-chat-widget></app-chat-widget>`
+       })
+       export class App {
+          protected readonly title = signal('chatbot-widget');
+       }
+       ```
+4. Run the development server:
+    ```powershell
+    ng serve
+    ```
+5. Access the app at `http://localhost:4200` in your browser.
 
 ---
 
 ## 2. Building Angular ZyBot as a Web Component
 
+You can build the widget as a web component to embed in any host application.
+
 ### Steps
 1. Build the project for production:
-   ```powershell
-   ng build --configuration production
-   ```
+    ```powershell
+    ng build --configuration production
+    ```
 2. The build output will be in `dist/chatbot-widget/browser/`.
 3. Copy the generated `main.js` (and any required files) from `dist/chatbot-widget/browser/` to your backend's `static/` folder.
 
@@ -45,12 +83,12 @@ To embed ZyBot in any host application (HTML page, React, Angular, etc.):
 
 1. Ensure your backend is running and serving static files (e.g., `main.js`) at a public URL.
 2. Add the following code to your host application's HTML:
-   ```html
-   <script src="https://localhost:9443/static/main.js"></script>
-   <zy-bot></zy-bot>
-   ```
-   - Replace the `src` URL with your backend's actual static file URL if different.
-   - `<zy-bot></zy-bot>` is the custom element for the chatbot widget.
+    ```html
+    <script src="https://localhost:9443/static/main.js"></script>
+    <zy-bot></zy-bot>
+    ```
+    - Replace the `src` URL with your backend's actual static file URL if different.
+    - `<zy-bot></zy-bot>` is the custom element for the chatbot widget.
 
 ---
 
