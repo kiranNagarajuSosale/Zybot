@@ -1,0 +1,77 @@
+# Angular ZyBot Widget Setup Manual
+
+This manual describes how to set up, build, and use the Angular ZyBot widget both as a standalone application and as a web component plugin for any host application.
+
+---
+
+## 1. Running Angular ZyBot Standalone
+
+### Prerequisites
+- Node.js and npm installed
+- Angular CLI installed globally (`npm install -g @angular/cli`)
+
+### Steps
+1. Navigate to the widget directory:
+   ```powershell
+   cd frontend\chatbot-widget
+   ```
+2. Install dependencies:
+   ```powershell
+   npm install
+   ```
+3. Run the development server:
+   ```powershell
+   ng serve
+   ```
+4. Access the app at `http://localhost:4200` in your browser.
+
+---
+
+## 2. Building Angular ZyBot as a Web Component
+
+### Steps
+1. Build the project for production:
+   ```powershell
+   ng build --configuration production
+   ```
+2. The build output will be in `dist/chatbot-widget/browser/`.
+3. Copy the generated `main.js` (and any required files) from `dist/chatbot-widget/browser/` to your backend's `static/` folder.
+
+---
+
+## 3. Using ZyBot as a Web Component Plugin
+
+To embed ZyBot in any host application (HTML page, React, Angular, etc.):
+
+1. Ensure your backend is running and serving static files (e.g., `main.js`) at a public URL.
+2. Add the following code to your host application's HTML:
+   ```html
+   <script src="https://localhost:9443/static/main.js"></script>
+   <zy-bot></zy-bot>
+   ```
+   - Replace the `src` URL with your backend's actual static file URL if different.
+   - `<zy-bot></zy-bot>` is the custom element for the chatbot widget.
+
+---
+
+## 4. Backend Integration
+- The Angular widget communicates with the backend via API calls.
+- Ensure the backend is running and accessible at the expected URL.
+- Update environment variables or configuration in the widget if the backend URL changes.
+
+---
+
+## 5. Troubleshooting
+- If the widget does not load, check the browser console for errors.
+- Ensure the backend is running and CORS is configured if accessing from a different domain.
+- Make sure `main.js` is correctly served from the backend's `static/` folder.
+
+---
+
+## 6. Customization
+- You can style or extend the widget by modifying the Angular source code in `src/app/chat-widget/`.
+- Rebuild and redeploy the widget after making changes.
+
+---
+
+For more details, refer to the main project README.
