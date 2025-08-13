@@ -87,7 +87,13 @@ To embed ZyBot in any host application (HTML page, React, Angular, etc.):
     <script src="https://localhost:9443/static/main.js"></script>
     <zy-bot></zy-bot>
     ```
-    - Replace the `src` URL with your backend's actual static file URL if different.
+    <!-- For local development, use: -->
+    <script src="https://localhost:9443/static/main.js"></script>
+    <!-- For production, use your actual domain: -->
+    <script src="https://your-domain.com/static/main.js"></script>
+    <zy-bot></zy-bot>
+    ```
+    - Replace `your-domain.com` with your backend's actual static file domain in production.
     - `<zy-bot></zy-bot>` is the custom element for the chatbot widget.
 
 ---
