@@ -35,7 +35,17 @@ frontend/
 		public/           # Public assets
 		examples/         # Usage examples
 scripts/
-	inject.js           # Utility scripts
+    - Secure server with SSL certificates
+    - Context management and ingestion
+    - Vector store for efficient retrieval
+    - Modular chatbot logic
+- **Frontend (Angular):**
+    - Customizable chat widget
+    - Modern UI/UX
+    - Service-based architecture
+    - Can run standalone or as a web component
+
+## Project Structure
 ```
 
 ## Setup Instructions
