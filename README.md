@@ -35,7 +35,17 @@ frontend/
 		public/           # Public assets
 		examples/         # Usage examples
 scripts/
-	inject.js           # Utility scripts
+    - Secure server with SSL certificates
+    - Context management and ingestion
+    - Vector store for efficient retrieval
+    - Modular chatbot logic
+- **Frontend (Angular):**
+    - Customizable chat widget
+    - Modern UI/UX
+    - Service-based architecture
+    - Can run standalone or as a web component
+
+## Project Structure
 ```
 
 ## Setup Instructions
@@ -84,7 +94,7 @@ To embed ZyBot in any host application (HTML page, React, Angular, etc.):
 1. Ensure your backend is running and serving static files (e.g., `main.js`) at a public URL.
 2. Add the following code to your host application's HTML:
 	```html
-	<script src="https://localhost:9443/static/main.js"></script>
+	<script src="https://your-domain.com/static/main.js"></script>
 	<zy-bot></zy-bot>
 	```
 	- Replace the `src` URL with your backend's actual static file URL if different.
