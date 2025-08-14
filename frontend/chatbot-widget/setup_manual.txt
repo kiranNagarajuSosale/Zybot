@@ -1,0 +1,121 @@
+
+# Angular ZyBot Widget Setup Manual
+
+This manual describes how to set up, build, and use the Angular ZyBot widget both as a standalone application and as a web component plugin for any host application.
+
+---
+
+## 1. Running Angular ZyBot Standalone (Full Angular App)
+
+You can run the Angular ZyBot as a full application for development or testing. Follow these steps:
+
+### Prerequisites
+- Node.js and npm installed
+- Angular CLI installed globally (`npm install -g @angular/cli`)
+
+### Steps
+1. Navigate to the widget directory:
+    ```powershell
+    cd frontend\chatbot-widget
+    ```
+2. Install dependencies:
+    ```powershell
+    npm install
+    ```
+3. Make sure the following files are set up for standalone mode:
+    - **`src/index.html`**
+       ```html
+       <!-- NOTE: This file is for running the Angular app independently. Use <app-root> for standalone mode. -->
+       <body>
+          <app-root></app-root>
+       </body>
+       ```
+    - **`src/main.ts`**
+       ```typescript
+       // NOTE: This entry point is for standalone Angular app. Use this for development and testing.
+       import { bootstrapApplication } from '@angular/platform-browser';
+       import { App } from './app/app';
+       import { appConfig } from './app/app.config';
+
+       bootstrapApplication(App, appConfig);
+       ```
+    - **`src/app/app.ts`**
+       ```typescript
+       // NOTE: This is the root Angular component for standalone mode.
+       import { Component, signal } from '@angular/core';
+       import { ChatWidgetComponent } from './chat-widget/chat-widget.component';
+
+       @Component({
+          selector: 'app-root',
+          standalone: true,
+          imports: [ChatWidgetComponent],
+          template: `<app-chat-widget></app-chat-widget>`
+       })
+       export class App {
+          protected readonly title = signal('chatbot-widget');
+       }
+       ```
+4. Run the development server:
+    ```powershell
+    ng serve
+    ```
+5. Access the app at `http://localhost:4200` in your browser.
+
+---
+
+## 2. Building Angular ZyBot as a Web Component
+
+You can build the widget as a web component to embed in any host application.
+
+### Steps
+1. Build the project for production:
+    ```powershell
+    ng build --configuration production
+    ```
+2. The build output will be in `dist/chatbot-widget/browser/`.
+3. Copy the generated `main.js` (and any required files) from `dist/chatbot-widget/browser/` to your backend's `static/` folder.
+
+---
+
+## 3. Using ZyBot as a Web Component Plugin
+
+To embed ZyBot in any host application (HTML page, React, Angular, etc.):
+
+1. Ensure your backend is running and serving static files (e.g., `main.js`) at a public URL.
+2. Add the following code to your host application's HTML:
+    ```html
+    <script src="http://ec2-13-200-117-156.ap-south-1.compute.amazonaws.com:8000/chat'"></script>
+    <zy-bot></zy-bot>
+    ```
+    <!-- For local development, use: -->
+    <script src="https://localhost:9443/static/main.js"></script>
+    <!-- For production, use your actual domain: -->
+    <script src="https://your-domain.com/static/main.js"></script>
+    <zy-bot></zy-bot>
+    ```
+    - Replace `your-domain.com` with your backend's actual static file domain in production.
+    - `<zy-bot></zy-bot>` is the custom element for the chatbot widget.
+
+---
+
+## 4. Backend Integration
+- The Angular widget communicates with the backend via API calls.
+- Ensure the backend is running and accessible at the expected URL.
+- Update environment variables or configuration in the widget if the backend URL changes.
+
+---
+
+## 5. Troubleshooting
+- If the widget does not load, check the browser console for errors.
+- Ensure the backend is running and CORS is configured if accessing from a different domain.
+- Make sure `main.js` is correctly served from the backend's `static/` folder.
+
+---
+
+## 6. Customization
+- You can style or extend the widget by modifying the Angular source code in `src/app/chat-widget/`.
+- Rebuild and redeploy the widget after making changes.
+
+---
+
+For more details, refer to the main project README.
