@@ -19,7 +19,7 @@ chat_chain = load_chain()  # default is "developer"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5199", "http://localhost:4200"], 
+    allow_origins=["http://localhost:5199", "http://localhost:4200", "*"], 
     allow_methods=["*"], 
     allow_headers=["*"],
     allow_credentials=True
