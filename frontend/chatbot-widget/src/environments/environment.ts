@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  chatUrl: 'https://127.0.0.1:9443/chat'
+  chatUrl: 'http://ec2-13-200-117-156.ap-south-1.compute.amazonaws.com:8000/chat'
 };
