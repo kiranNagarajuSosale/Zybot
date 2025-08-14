@@ -93,7 +93,7 @@ To embed ZyBot in any host application (HTML page, React, Angular, etc.):
 
 ## Usage
 - Access the chatbot via the Angular frontend (standalone mode) or embed the web component in any host application.
-- Backend runs on a secure Flask server and serves the widget's build files.
+- Backend runs on a secure FastAPI and serves the widget's build files.
 - Customize the chat widget and backend logic as needed.
 
 

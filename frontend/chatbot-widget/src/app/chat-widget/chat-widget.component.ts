@@ -77,7 +77,7 @@ export class ChatWidgetComponent implements AfterViewChecked, OnInit {
   }
   
   private showWelcomeMessage() {
-    const welcomeMessage = "👋 Welcome to ZyBot! I'm your virtual assistant ready to help with your questions. Feel free to ask me anything about this website.";
+    const welcomeMessage = "👋 Welcome to ZyBot! I'm your virtual buddy ready to help with your questions. Feel free to ask me anything about this application.";
     
     this.messages.push({
       text: welcomeMessage,
